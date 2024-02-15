@@ -1,12 +1,14 @@
 # QuickPasteAssistant
-This code is for a PyQt6 application that automates input operations by reading data from an Excel file and pasting it into input fields using keyboard shortcuts. 
 
-#### Key Features:
+QuickPasteAssistant is a PyQt6-based desktop application designed to streamline the process of repetitive data entry. This tool automates copying data from Excel spreadsheets and pasting it into other applications, which makes it indispensable for tasks that require transferring large amounts of data quickly and accurately.
 
-The application allows the user to select an Excel file, choose a sheet, and a column to read data from.
+## Features
 
-The user can specify the range of rows to process.
+- Select and read data from specific Excel files, sheets, and columns.
+- Set a range of rows for the data copying process.
+- Customize the key (right arrow, down arrow, or tab) used to move to the next input field.
+- Set a delay between automated paste operations to match the pace of different input scenarios.
 
-The user can choose the key to use for moving to the next input field (right arrow, down arrow, or tab).
+## Installation
 
-The user can set a custom delay time between inputs.
+To run QuickPasteAssistant, you'll need Python installed on your system. 
