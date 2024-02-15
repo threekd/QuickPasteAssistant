@@ -12,3 +12,9 @@ QuickPasteAssistant is a PyQt6-based desktop application designed to streamline 
 ## Installation
 
 To run QuickPasteAssistant, you'll need Python installed on your system. 
+
+## Contributing
+Contributions are welcome! If you have an idea for an improvement or have found a bug, please open an issue or create a pull request.
+
+## License
+QuickPasteAssistant is released under the [MIT License](https://www.mit-license.org/).
