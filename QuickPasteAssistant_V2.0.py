@@ -3,8 +3,8 @@ import sys, os, time
 import pandas as pd
 import pyperclip
 import pyautogui
-from PyQt6.QtGui import QAction, QPainter, QColor, QFont
-from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize
+from PyQt6.QtGui import QAction, QPainter, QColor, QFont, QDesktopServices
+from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize, QUrl
 from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox,
     QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
 
@@ -107,7 +107,10 @@ class MainWindow(QMainWindow):
     def initUI(self):
 
         menubar = self.menuBar()
-        NextKeyMenu = menubar.addMenu('&about')
+        aboutMenu = menubar.addMenu('&About')
+        GithubWebsiteAction = QAction('Visit Github', self)
+        GithubWebsiteAction.triggered.connect(self.openGithubWebsite)
+        aboutMenu.addAction(GithubWebsiteAction)
 
         self.labelFilePath = QLabel('Select an Excel: ')
         self.labelSheetName = QLabel('Select a sheet:')
@@ -194,7 +197,7 @@ class MainWindow(QMainWindow):
 
         self.resize(320,250)
         self.center()
-        self.setWindowTitle('Input Bot')
+        self.setWindowTitle('QuickPasteAssistant')
         self.show()
 
     def showDialog(self):
@@ -332,6 +335,10 @@ class MainWindow(QMainWindow):
         msgBox.setText(msg)
         msgBox.setWindowTitle("Warning")
         msgBox.exec()
+
+    def openGithubWebsite(self):
+        url = QUrl("https://github.com/threekd/QuickPasteAssistant")
+        QDesktopServices.openUrl(url)
         
 
 
