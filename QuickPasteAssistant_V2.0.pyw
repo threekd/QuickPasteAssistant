@@ -1,5 +1,5 @@
 import sys, os, time
-
+import traceback
 import pandas as pd
 import pyperclip
 import pyautogui
@@ -340,7 +340,11 @@ class MainWindow(QMainWindow):
         url = QUrl("https://github.com/threekd/QuickPasteAssistant")
         QDesktopServices.openUrl(url)
         
-
+def excepthook(exc_type, exc_value, exc_traceback):
+    error_msg = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+    QMessageBox.critical(None, 'An error occurred', error_msg)
+    
+sys.excepthook = excepthook
 
 def main():
 
