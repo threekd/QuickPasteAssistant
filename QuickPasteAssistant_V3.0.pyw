@@ -5,7 +5,7 @@ import pyperclip
 import pyautogui
 from PyQt6.QtGui import QAction, QPainter, QColor, QFont, QDesktopServices
 from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize, QUrl, QItemSelectionModel
-from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox, QListWidgetItem, QListWidget,
+from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox, QListWidgetItem, QListWidget,QSizePolicy,
     QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
 
 
@@ -194,29 +194,27 @@ class MainWindow(QMainWindow):
         self.status_Label.setStyleSheet('color: red')
         self.statusBar.addPermanentWidget(self.status_Label)
 
-        vbox1 = QVBoxLayout()
-        vbox1.addLayout(hbox_file)
-        vbox1.addLayout(hbox_sheet)
-        vbox1.addLayout(hbox_column)
-        vbox1.addLayout(hbox_range)
-        vbox1.addLayout(hbox_progressbar_Loop)
-        vbox1.addLayout(hbox_buttun)
+        self.vbox1 = QVBoxLayout()
+        self.vbox1.addLayout(hbox_file)
+        self.vbox1.addLayout(hbox_sheet)
+        self.vbox1.addLayout(hbox_column)
+        self.vbox1.addLayout(hbox_range)
+        self.vbox1.addLayout(hbox_progressbar_Loop)
+        self.vbox1.addLayout(hbox_buttun)
 
         self.SelectedItem_ListWidget = QListWidget()
 
-        vbox2 = QVBoxLayout()
-        vbox2.addWidget(self.SelectedItem_ListWidget)
+        self.SelectedItem_ListWidget.hide()  # Initially hide this QWidget
 
-
-        QBox = QHBoxLayout()
-        QBox.addLayout(vbox1, stretch=3)
-        QBox.addLayout(vbox2, stretch=1)
+        mainLayout = QHBoxLayout()
+        mainLayout.addLayout(self.vbox1)
+        mainLayout.addWidget(self.SelectedItem_ListWidget)  # Add the wrapper QWidget to the main layout
 
         main_widget = QWidget()
-        main_widget.setLayout(QBox)
+        main_widget.setLayout(mainLayout)
         self.setCentralWidget(main_widget)
 
-        self.resize(420,280)
+        self.resize(320,250)
         self.center()
         self.setWindowTitle('QuickPasteAssistant')
         self.show()
@@ -308,7 +306,7 @@ class MainWindow(QMainWindow):
 
         # get the selected column name
         column_name = self.combo_ColumnList.currentText()
-        column_name_str = "0) " + str(column_name)
+        column_name_str = "0) " + column_name
         self.SelectedItem_ListWidget.addItem(QListWidgetItem(column_name_str))
 
         # loop through the selected range and add the items to the list
@@ -317,6 +315,15 @@ class MainWindow(QMainWindow):
             value_str= str(row+1) + ") " + str(value)
             item = QListWidgetItem(value_str)  # convert the value to string
             self.SelectedItem_ListWidget.addItem(item)
+
+        max_width = 0
+        for index in range(self.SelectedItem_ListWidget.count()):
+            max_width = max(max_width, self.SelectedItem_ListWidget.sizeHintForColumn(index))
+        
+        self.SelectedItem_ListWidget.setFixedWidth(max_width + 20)
+        self.resize(320 + max_width + 20,250)
+
+        self.SelectedItem_ListWidget.show()
 
     def center(self):
 
@@ -405,7 +412,7 @@ class MainWindow(QMainWindow):
 
         if self.isActiveWindow():
             is_mainWindow_active = True
-            self.update_status('Pause...')
+            self.update_status('Waiting...')
         else:
             is_mainWindow_active = False
             self.update_status('Running...')
