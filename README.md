@@ -26,7 +26,7 @@ pip install pandas pyautogui PyQt6 openpyxl Pyarrow
 - Choose a sheet and a column from the dropdown menus.
 - Enter the range of rows you wish to copy data from.
 - Set the desired delay between paste operations.(optional)
-- Click the "Start" button to begin the process.
+- Click the "Start" button and then click on the first input box to begin the process.
 - If you wish to pause the automation, click the "Pause" button.
 
 
