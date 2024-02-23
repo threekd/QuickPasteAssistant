@@ -25,7 +25,11 @@ except ImportError:
     for package in required_packages:
         try:
             print(f"Installing {package}...")
-            subprocess.check_call([sys.executable, "-m", "pip", "install", package], stdout=sys.stdout, stderr=sys.stderr, shell=True)
+            process = subprocess.Popen([sys.executable, "-m", "pip", "install", package], 
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            out, err = process.communicate()
+            print(out.decode())
+            print(err.decode(), file=sys.stderr)
         except subprocess.CalledProcessError as e:
             print(f"Failed to install {package}. Error: {e}")
 
