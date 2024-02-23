@@ -298,7 +298,7 @@ class MainWindow(QMainWindow):
 
         # check if the selected range is valid
         if begin_row >= end_row or end_row > self.Lastbegin_row:
-            self.msg_info('Invalid row range selected.')
+            msg_info('Warning','Invalid row range selected.')
             return
 
         # clear the existing list
@@ -343,7 +343,7 @@ class MainWindow(QMainWindow):
         selected_key_text = self.combo_ArrowList.currentText()
         next_key = next_key_mapping.get(selected_key_text, 'right')
         if not hasattr(self, 'login_data'):
-            self.msg_info('Please load data to get started...')
+            msg_info('Warning','Please load data to get started...')
             return
 
         if hasattr(self, 'thread_runloop') and self.thread_runloop.isRunning():
@@ -372,7 +372,7 @@ class MainWindow(QMainWindow):
         global is_mainWindow_active
 
         if not hasattr(self, 'login_data'):
-            self.msg_info('Please load data to get started...')
+            msg_info('Warning','Please load data to get started...')
             return
 
         is_mainWindow_active = True
@@ -416,28 +416,34 @@ class MainWindow(QMainWindow):
         else:
             is_mainWindow_active = False
             self.update_status('Running...')
-    
-    def msg_info(self, msg):
-        
-        msgBox = QMessageBox()
-        msgBox.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
-        msgBox.setIcon(QMessageBox.Icon.Information)
-        msgBox.setText(msg)
-        msgBox.setWindowTitle("Warning")
-        msgBox.exec()
 
     def openGithubWebsite(self):
         url = QUrl("https://github.com/threekd/QuickPasteAssistant")
         QDesktopServices.openUrl(url)
         
 def excepthook(exc_type, exc_value, exc_traceback):
+    print("Exception hook called")
     error_msg = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
-    QMessageBox.critical(None, 'An error occurred', error_msg)
+    ErrorMsgBox = QMessageBox()
+    ErrorMsgBox.setWindowTitle('An error occurred')
+    ErrorMsgBox.setText(error_msg)
+    ErrorMsgBox.setIcon(QMessageBox.Icon.Critical)
+    ErrorMsgBox.setWindowFlags(ErrorMsgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
+    ErrorMsgBox.exec()
+
+
+def msg_info(title, msg):
+        
+    msgBox = QMessageBox()
+    msgBox.setWindowFlags(msgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
+    msgBox.setIcon(QMessageBox.Icon.Information)
+    msgBox.setText(msg)
+    msgBox.setWindowTitle(title)
+    msgBox.exec()
     
 sys.excepthook = excepthook
 
 def main():
-
     app = QApplication(sys.argv)
     InputDialog = MainWindow()
     sys.exit(app.exec())
