@@ -1,13 +1,23 @@
-import sys, os, time
-import traceback
-import pandas as pd
-import pyperclip
-import pyautogui
-from PyQt6.QtGui import QAction, QPainter, QColor, QFont, QDesktopServices
-from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize, QUrl, QItemSelectionModel
-from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox, QListWidgetItem, QListWidget,
-    QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
+required_packages = ("openpyxl","Pyarrow", "pandas", "pyautogui", "PyQt6")
 
+try:
+    import ctypes
+    import sys, os, time, subprocess
+    import traceback
+    import pandas as pd
+    import pyperclip
+    import pyautogui
+    from PyQt6.QtGui import QAction, QPainter, QColor, QFont, QDesktopServices
+    from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize, QUrl, QItemSelectionModel
+    from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox, QListWidgetItem, QListWidget,
+    QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
+except ImportError:
+    ctypes.windll.kernel32.AllocConsole()
+    print("Install Packages...")
+    for package in required_packages:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+    print("Compeleted!")
+    ctypes.windll.kernel32.FreeConsole()
 
 is_mainWindow_active = True
 
@@ -433,14 +443,13 @@ def excepthook(exc_type, exc_value, exc_traceback):
 
 
 def msg_info(title, msg):
-        
     msgBox = QMessageBox()
     msgBox.setWindowFlags(msgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
     msgBox.setIcon(QMessageBox.Icon.Information)
     msgBox.setText(msg)
     msgBox.setWindowTitle(title)
     msgBox.exec()
-    
+
 sys.excepthook = excepthook
 
 def main():
