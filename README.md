@@ -11,7 +11,8 @@ QuickPasteAssistant is a PyQt6-based desktop application designed to streamline 
 
 ## Installation
 
-To run QuickPasteAssistant, you'll need Python installed on your system. (Suggested version: python 3.11)
+- To run QuickPasteAssistant, you'll need Python installed on your system. (Suggested version: Python 3.11)
+- Upon first execution, the necessary packages will be installed, which may take several minutes.
 
 ## Usage
 - Start the application by running the QuickPasteAssistant.py script.
@@ -19,7 +20,7 @@ To run QuickPasteAssistant, you'll need Python installed on your system. (Sugges
 - Choose a sheet and a column from the dropdown menus.
 - Enter the range of rows you wish to copy data from.
 - Set the desired delay between paste operations.(optional)
-- Click the "Start" button and then click on the first input box to begin the process.
+- Click the "Start" button and then click on the first input box of another program to begin the process.
 - If you wish to pause the automation, click the "Pause" button.
 
 
