@@ -62,8 +62,8 @@ class RunLoopThread(QThread):
         global is_mainWindow_active
 
         while is_mainWindow_active and self.is_running:
-            time.sleep(1)
             self.checkActiveSignal.emit()
+            time.sleep(1)
         time.sleep(2)
 
     def pause(self):
@@ -394,13 +394,14 @@ class MainWindow(QMainWindow):
         if not hasattr(self, 'login_data'):
             msg_info('Warning','Please load data to get started...')
             return
-
-        is_mainWindow_active = True
-
-        self.thread_runloop.pause()
-        self.update_status('Pause...')
+        if hasattr(self, 'thread_runloop') and self.thread_runloop.isRunning():
+            self.thread_runloop.pause()
+            self.update_status('Pause...')
+        else:
+            msg_info('Warning', 'There is no loop running to pause.')
 
         self.setAllControlsEnabled(True)
+        is_mainWindow_active = True
 
     def onLoopProgress(self,index):
 
@@ -432,7 +433,7 @@ class MainWindow(QMainWindow):
 
         if self.isActiveWindow():
             is_mainWindow_active = True
-            self.update_status('Waiting...')
+            self.update_status('Please click another input box...')
         else:
             is_mainWindow_active = False
             self.update_status('Running...')
