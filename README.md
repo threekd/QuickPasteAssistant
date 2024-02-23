@@ -11,14 +11,7 @@ QuickPasteAssistant is a PyQt6-based desktop application designed to streamline 
 
 ## Installation
 
-To run QuickPasteAssistant, you'll need:
-
-- Install python on your system. (Suggested version: python 3.11)
-- install the required libraries by running "Install_Packages.py" script
-or using the following command:
-```bash
-pip install pandas pyautogui PyQt6 openpyxl Pyarrow
-```
+To run QuickPasteAssistant, you'll need Python installed on your system. (Suggested version: python 3.11)
 
 ## Usage
 - Start the application by running the QuickPasteAssistant.py script.
