@@ -1,3 +1,6 @@
+QPA_Name = 'QuickPasteAssistant_V3.1.pyw'
+QPA_Version = 'Version 3.1'
+
 required_packages = ("openpyxl","Pyarrow", "pandas", "pyautogui", "PyQt6")
 
 try:
@@ -18,6 +21,7 @@ except ImportError:
     sys.stderr = open('CONOUT$', 'w', buffering=1)
 
     print("Install Packages...")
+    print("It may take several minutes...")
     for package in required_packages:
         try:
             print(f"Installing {package}...")
@@ -27,7 +31,7 @@ except ImportError:
 
     print("Completed!")
     ctypes.windll.kernel32.FreeConsole()
-    subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), 'QuickPasteAssistant_V3.0.pyw'])
+    subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), QPA_Name])
 
 is_mainWindow_active = True
 
@@ -210,7 +214,7 @@ class MainWindow(QMainWindow):
         self.statusBar.insertWidget(0, self.spin_Delay)
         self.statusBar.insertWidget(0, self.labelDelay) 
 
-        self.status_Label = QLabel('Version 3.0')
+        self.status_Label = QLabel(QPA_Version)
         self.status_Label.setStyleSheet('color: red')
         self.statusBar.addPermanentWidget(self.status_Label)
 
