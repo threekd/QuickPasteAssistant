@@ -13,11 +13,21 @@ try:
     QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
 except ImportError:
     ctypes.windll.kernel32.AllocConsole()
+
+    sys.stdout = open('CONOUT$', 'w', buffering=1)
+    sys.stderr = open('CONOUT$', 'w', buffering=1)
+
     print("Install Packages...")
     for package in required_packages:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-    print("Compeleted!")
+        try:
+            print(f"Installing {package}...")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package], stdout=sys.stdout, stderr=sys.stderr, shell=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to install {package}. Error: {e}")
+
+    print("Completed!")
     ctypes.windll.kernel32.FreeConsole()
+    subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), 'QuickPasteAssistant_V3.0.pyw'])
 
 is_mainWindow_active = True
 
