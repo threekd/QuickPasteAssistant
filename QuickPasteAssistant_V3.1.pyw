@@ -5,8 +5,7 @@ required_packages = ("openpyxl","Pyarrow", "pandas", "pyautogui", "PyQt6")
 
 try:
     import ctypes
-    import tkinter as tk
-    from tkinter import messagebox
+    from tkinter import messagebox,Tk, Label
     import sys, os, time, subprocess
     import traceback
     import pandas as pd
@@ -130,14 +129,24 @@ class CustomProgressBar(QProgressBar):
         # Set the text rectangle for drawing, with right alignment
         textRect = self.rect().adjusted(0, 0, -offset.width(), -offset.height())
         painter.drawText(textRect, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter, text)
-        painter.end()  # End the drawing session   
-
+        painter.end()  # End the drawing session  
+     
 class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        root = Tk()
+        root.eval('tk::PlaceWindow . center')
+        root.title('Starting')
+
+        label = Label(root, text='Program Starting...')
+        label.pack(pady=20)
+        root.update()
+        time.sleep(3)
+
         self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
         self.initUI()
+        root.destroy()
         self.settings = QSettings("Myorganization","MyApp")
 
         selection_style = """
