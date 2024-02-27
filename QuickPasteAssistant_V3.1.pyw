@@ -5,6 +5,8 @@ required_packages = ("openpyxl","Pyarrow", "pandas", "pyautogui", "PyQt6")
 
 try:
     import ctypes
+    import tkinter as tk
+    from tkinter import messagebox
     import sys, os, time, subprocess
     import traceback
     import pandas as pd
@@ -14,31 +16,37 @@ try:
     from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize, QUrl, QItemSelectionModel
     from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox, QListWidgetItem, QListWidget,
     QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
-    from selenium import webdriver
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.chrome.options import Options
+
 except ImportError:
-    ctypes.windll.kernel32.AllocConsole()
 
-    sys.stdout = open('CONOUT$', 'w', buffering=1)
-    sys.stderr = open('CONOUT$', 'w', buffering=1)
+    message = "Some dependencies are missing. Do you want to install them?"
+    answer = messagebox.askyesno("Install Dependencies", message)
+    
+    if answer:
 
-    print("Install Packages...")
-    print("It may take several minutes...")
-    for package in required_packages:
-        try:
-            print(f"Installing {package}...")
-            process = subprocess.Popen([sys.executable, "-m", "pip", "install", package], 
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            out, err = process.communicate()
-            print(out.decode())
-            print(err.decode(), file=sys.stderr)
-        except subprocess.CalledProcessError as e:
-            print(f"Failed to install {package}. Error: {e}")
+        ctypes.windll.kernel32.AllocConsole()
 
-    print("Completed!")
-    ctypes.windll.kernel32.FreeConsole()
-    subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), QPA_Name])
+        sys.stdout = open('CONOUT$', 'w', buffering=1)
+        sys.stderr = open('CONOUT$', 'w', buffering=1)
+
+        print("Install Packages...")
+        print("It may take several minutes...")
+        for package in required_packages:
+            try:
+                print(f"Installing {package}...")
+                process = subprocess.Popen([sys.executable, "-m", "pip", "install", package], 
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                out, err = process.communicate()
+                print(out.decode())
+                print(err.decode(), file=sys.stderr)
+            except subprocess.CalledProcessError as e:
+                print(f"Failed to install {package}. Error: {e}")
+
+        print("Completed!")
+        ctypes.windll.kernel32.FreeConsole()
+        subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), QPA_Name])
+    else:
+        exit()
 
 is_mainWindow_active = True
 
@@ -123,7 +131,34 @@ class CustomProgressBar(QProgressBar):
         textRect = self.rect().adjusted(0, 0, -offset.width(), -offset.height())
         painter.drawText(textRect, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter, text)
         painter.end()  # End the drawing session
-        
+class SplashScreen(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('启动中')
+        layout = QVBoxLayout()
+        self.label = QLabel('程序启动中，请稍候...')
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+
+class SplashScreenThread(QThread):
+    finished = pyqtSignal()  # 发出加载完成的信号
+
+    def __init__(self):
+        super().__init__()
+        self.splash_screen = SplashScreen()
+
+    def run(self):
+        self.splash_screen.show()
+        while self.isRunning():
+            time.sleep(0.1)
+            QApplication.processEvents()  # 处理应用程序事件
+
+    def stop(self):
+        self.splash_screen.close()
+        self.terminate()  # 安全地终止线程      
 
 class MainWindow(QMainWindow):
 
@@ -477,7 +512,10 @@ sys.excepthook = excepthook
 
 def main():
     app = QApplication(sys.argv)
+    splash_screen_thread = SplashScreenThread()
+    splash_screen_thread.start()
     InputDialog = MainWindow()
+    splash_screen_thread.stop()
     sys.exit(app.exec())
 
 if __name__ == '__main__':
