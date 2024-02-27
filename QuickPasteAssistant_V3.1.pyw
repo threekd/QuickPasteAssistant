@@ -45,7 +45,7 @@ except ImportError:
         ctypes.windll.kernel32.FreeConsole()
         subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), QPA_Name])
     else:
-        exit()
+        sys.exit()
 
 is_mainWindow_active = True
 
