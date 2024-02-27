@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
         self.combo_SheetList = QComboBox(self)
         self.combo_ColumnList = QComboBox(self)
         self.combo_ArrowList = QComboBox(self)
-        self.combo_ArrowList.addItems(['Move next: →','Move next: ↓','Move next: tab'])
+        self.combo_ArrowList.addItems(['Move next: →','Move next: ↓','Move next: tab','Move next: enter'])
 
         self.qle_StartRow = QLineEdit()
         self.qle_Lastbegin_row = QLineEdit()
@@ -368,7 +368,8 @@ class MainWindow(QMainWindow):
         next_key_mapping = {
             'Move next: →': 'right',
             'Move next: ↓': 'down',
-            'Move next: tab': 'tab'
+            'Move next: tab': 'tab',
+            'Move next: enter': 'enter'
         }
 
         selected_key_text = self.combo_ArrowList.currentText()
@@ -471,32 +472,6 @@ def msg_info(title, msg):
     msgBox.setText(msg)
     msgBox.setWindowTitle(title)
     msgBox.exec()
-
-def send_to_gpt():
-
-    chrome_options = Options()
-
-    user_data_dir = r'C:\Users\Neo\AppData\Local\Google\Chrome\User Data'
-    chrome_options.add_argument(f"user-data-dir={user_data_dir}")
-
-    driver = webdriver.Chrome(options=chrome_options)
-
-
-    driver.get("https://cokechat.azurewebsites.net/c/new")
-    time.sleep(5)
-
-    text_box = driver.find_element(by=By.ID, value="prompt-textarea")
-    send_button = driver.find_element(By.CSS_SELECTOR, "button[data-testid='send-button']")
-
-    
-    text_box.send_keys('Hello')
-    time.sleep(1)
-
-    send_button.click()
-
-
-    x = input('Pause..')
-    driver.quit()
 
 sys.excepthook = excepthook
 
