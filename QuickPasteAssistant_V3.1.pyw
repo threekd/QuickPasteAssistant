@@ -5,7 +5,7 @@ required_packages = ("openpyxl","Pyarrow", "pandas", "pyautogui", "PyQt6")
 
 try:
     import ctypes
-    from tkinter import messagebox,Tk, Label
+    from tkinter import messagebox
     import sys, os, time, subprocess
     import traceback
     import pandas as pd
@@ -18,7 +18,7 @@ try:
 
 except ImportError:
 
-    message = "Some dependencies are missing. Do you want to install them?"
+    message = "Some required Python libraries are missing. Do you want to install them?"
     answer = messagebox.askyesno("Install Dependencies", message)
     
     if answer:
@@ -129,24 +129,14 @@ class CustomProgressBar(QProgressBar):
         # Set the text rectangle for drawing, with right alignment
         textRect = self.rect().adjusted(0, 0, -offset.width(), -offset.height())
         painter.drawText(textRect, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter, text)
-        painter.end()  # End the drawing session  
-     
+        painter.end()  # End the drawing session
+
 class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        root = Tk()
-        root.eval('tk::PlaceWindow . center')
-        root.title('Starting')
-
-        label = Label(root, text='Program Starting...')
-        label.pack(pady=20)
-        root.update()
-        time.sleep(3)
-
         self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
         self.initUI()
-        root.destroy()
         self.settings = QSettings("Myorganization","MyApp")
 
         selection_style = """
@@ -179,7 +169,7 @@ class MainWindow(QMainWindow):
         self.combo_SheetList = QComboBox(self)
         self.combo_ColumnList = QComboBox(self)
         self.combo_ArrowList = QComboBox(self)
-        self.combo_ArrowList.addItems(['Move next: →','Move next: ↓','Move next: tab','Move next: enter'])
+        self.combo_ArrowList.addItems(['Next: →','Next: ↓','Next: tab','Next: enter'])
 
         self.qle_StartRow = QLineEdit()
         self.qle_Lastbegin_row = QLineEdit()
@@ -382,10 +372,10 @@ class MainWindow(QMainWindow):
     def btn_Start_Clicked(self):
 
         next_key_mapping = {
-            'Move next: →': 'right',
-            'Move next: ↓': 'down',
-            'Move next: tab': 'tab',
-            'Move next: enter': 'enter'
+            'Next: →': 'right',
+            'Next: ↓': 'down',
+            'Next: tab': 'tab',
+            'Next: enter': 'enter'
         }
 
         selected_key_text = self.combo_ArrowList.currentText()
