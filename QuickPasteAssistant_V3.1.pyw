@@ -14,6 +14,9 @@ try:
     from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize, QUrl, QItemSelectionModel
     from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox, QListWidgetItem, QListWidget,
     QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
+    from selenium import webdriver
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.chrome.options import Options
 except ImportError:
     ctypes.windll.kernel32.AllocConsole()
 
@@ -468,6 +471,32 @@ def msg_info(title, msg):
     msgBox.setText(msg)
     msgBox.setWindowTitle(title)
     msgBox.exec()
+
+def send_to_gpt():
+
+    chrome_options = Options()
+
+    user_data_dir = r'C:\Users\Neo\AppData\Local\Google\Chrome\User Data'
+    chrome_options.add_argument(f"user-data-dir={user_data_dir}")
+
+    driver = webdriver.Chrome(options=chrome_options)
+
+
+    driver.get("https://cokechat.azurewebsites.net/c/new")
+    time.sleep(5)
+
+    text_box = driver.find_element(by=By.ID, value="prompt-textarea")
+    send_button = driver.find_element(By.CSS_SELECTOR, "button[data-testid='send-button']")
+
+    
+    text_box.send_keys('Hello')
+    time.sleep(1)
+
+    send_button.click()
+
+
+    x = input('Pause..')
+    driver.quit()
 
 sys.excepthook = excepthook
 
