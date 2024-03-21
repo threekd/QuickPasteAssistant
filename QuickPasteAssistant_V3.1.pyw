@@ -137,7 +137,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
         self.initUI()
-        self.settings = QSettings("Myorganization","MyApp")
+        self.settings = QSettings("Myorganization","QPA")
 
         selection_style = """
         QListWidget::item:selected {
