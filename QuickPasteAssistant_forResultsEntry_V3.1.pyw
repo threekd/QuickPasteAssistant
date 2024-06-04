@@ -59,7 +59,7 @@ class ReadFileThread(QThread):
 
     def run(self):
 
-        self.sheets_data = pd.read_excel(self.filepath, sheet_name=None)
+        self.sheets_data = pd.read_excel(self.filepath, sheet_name=None, dtype=str)
         self.notifyread_finished.emit(1)
 
 class RunLoopThread(QThread):
@@ -251,7 +251,7 @@ class MainWindow(QMainWindow):
 
         self.resize(320,250)
         self.center()
-        self.setWindowTitle('QuickPasteAssistant')
+        self.setWindowTitle('QPA_SR')
         self.show()
     
     def setAllControlsEnabled(self, enabled):
