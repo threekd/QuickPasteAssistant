@@ -3,49 +3,16 @@ QPA_Version = 'Version 3.1'
 
 required_packages = ("openpyxl","Pyarrow", "pandas", "pyautogui", "PyQt6")
 
-try:
-    import ctypes
-    from tkinter import messagebox
-    import sys, os, time, subprocess
-    import traceback
-    import pandas as pd
-    import pyperclip
-    import pyautogui
-    from PyQt6.QtGui import QAction, QPainter, QColor, QFont, QDesktopServices
-    from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize, QUrl, QItemSelectionModel
-    from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox, QListWidgetItem, QListWidget,
-    QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
+import sys, os, time
+import traceback
+import pandas as pd
+import pyperclip
+import pyautogui
+from PyQt6.QtGui import QAction, QPainter, QColor, QFont, QDesktopServices
+from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize, QUrl, QItemSelectionModel
+from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox, QListWidgetItem, QListWidget,
+QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
 
-except ImportError:
-
-    message = "Some required Python libraries are missing. Do you want to install them?"
-    answer = messagebox.askyesno("Install Dependencies", message)
-    
-    if answer:
-
-        ctypes.windll.kernel32.AllocConsole()
-
-        sys.stdout = open('CONOUT$', 'w', buffering=1)
-        sys.stderr = open('CONOUT$', 'w', buffering=1)
-
-        print("Install Packages...")
-        print("It may take several minutes...")
-        for package in required_packages:
-            try:
-                print(f"Installing {package}...")
-                process = subprocess.Popen([sys.executable, "-m", "pip", "install", package], 
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                out, err = process.communicate()
-                print(out.decode())
-                print(err.decode(), file=sys.stderr)
-            except subprocess.CalledProcessError as e:
-                print(f"Failed to install {package}. Error: {e}")
-
-        print("Completed!")
-        ctypes.windll.kernel32.FreeConsole()
-        subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), QPA_Name])
-    else:
-        sys.exit()
 
 is_mainWindow_active = True
 
@@ -59,7 +26,7 @@ class ReadFileThread(QThread):
 
     def run(self):
 
-        self.sheets_data = pd.read_excel(self.filepath, sheet_name=None, dtype=str)
+        self.sheets_data = pd.read_excel(self.filepath, sheet_name=None)
         self.notifyread_finished.emit(1)
 
 class RunLoopThread(QThread):
@@ -96,7 +63,9 @@ class RunLoopThread(QThread):
             if not self.is_running:
                 break
 
-            pyautogui.typewrite(str(self.data[i]), interval=0.1)
+            pyperclip.copy(str(self.data[i]))
+            time.sleep(0.5)
+            pyautogui.hotkey('ctrl','v')
             time.sleep(self.delay)
             pyautogui.press(self.next_key)
 
@@ -167,7 +136,7 @@ class MainWindow(QMainWindow):
         self.combo_SheetList = QComboBox(self)
         self.combo_ColumnList = QComboBox(self)
         self.combo_ArrowList = QComboBox(self)
-        self.combo_ArrowList.addItems(['Next: ↓','Next: →','Next: tab','Next: enter'])
+        self.combo_ArrowList.addItems(['Next: →','Next: ↓','Next: tab','Next: enter'])
 
         self.qle_StartRow = QLineEdit()
         self.qle_Lastbegin_row = QLineEdit()
@@ -251,7 +220,7 @@ class MainWindow(QMainWindow):
 
         self.resize(320,250)
         self.center()
-        self.setWindowTitle('QPA_SR')
+        self.setWindowTitle('QuickPasteAssistant')
         self.show()
     
     def setAllControlsEnabled(self, enabled):
@@ -370,8 +339,8 @@ class MainWindow(QMainWindow):
     def btn_Start_Clicked(self):
 
         next_key_mapping = {
-            'Next: ↓': 'down',
             'Next: →': 'right',
+            'Next: ↓': 'down',
             'Next: tab': 'tab',
             'Next: enter': 'enter'
         }

@@ -3,49 +3,18 @@ QPA_Version = 'Version 3.1'
 
 required_packages = ("openpyxl","Pyarrow", "pandas", "pyautogui", "PyQt6")
 
-try:
-    import ctypes
-    from tkinter import messagebox
-    import sys, os, time, subprocess
-    import traceback
-    import pandas as pd
-    import pyperclip
-    import pyautogui
-    from PyQt6.QtGui import QAction, QPainter, QColor, QFont, QDesktopServices
-    from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize, QUrl, QItemSelectionModel
-    from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox, QListWidgetItem, QListWidget,
-    QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
+import ctypes
+from tkinter import messagebox
+import sys, os, time, subprocess
+import traceback
+import pandas as pd
+import pyperclip
+import pyautogui
+from PyQt6.QtGui import QAction, QPainter, QColor, QFont, QDesktopServices
+from PyQt6.QtCore import QThread, pyqtSignal, Qt, QSettings, QSize, QUrl, QItemSelectionModel
+from PyQt6.QtWidgets import (QWidget, QMainWindow, QFileDialog, QApplication, QLabel,QComboBox, QListWidgetItem, QListWidget,
+QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QProgressBar,QSpinBox, QMessageBox)
 
-except ImportError:
-
-    message = "Some required Python libraries are missing. Do you want to install them?"
-    answer = messagebox.askyesno("Install Dependencies", message)
-    
-    if answer:
-
-        ctypes.windll.kernel32.AllocConsole()
-
-        sys.stdout = open('CONOUT$', 'w', buffering=1)
-        sys.stderr = open('CONOUT$', 'w', buffering=1)
-
-        print("Install Packages...")
-        print("It may take several minutes...")
-        for package in required_packages:
-            try:
-                print(f"Installing {package}...")
-                process = subprocess.Popen([sys.executable, "-m", "pip", "install", package], 
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                out, err = process.communicate()
-                print(out.decode())
-                print(err.decode(), file=sys.stderr)
-            except subprocess.CalledProcessError as e:
-                print(f"Failed to install {package}. Error: {e}")
-
-        print("Completed!")
-        ctypes.windll.kernel32.FreeConsole()
-        subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), QPA_Name])
-    else:
-        sys.exit()
 
 is_mainWindow_active = True
 
